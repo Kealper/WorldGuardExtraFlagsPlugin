@@ -28,29 +28,29 @@ public class CommandOnExitFlag extends Handler
             return new CommandOnExitFlag(session);
         }
     }
-	
+
 	private Collection<Set<String>> lastCommands;
-	    
+
 	protected CommandOnExitFlag(Session session)
 	{
 		super(session);
-		
+
 		this.lastCommands = new ArrayList<>();
 	}
-	
+
     @Override
     public void initialize(Player player, Location current, ApplicableRegionSet set)
     {
     	this.lastCommands = set.queryAllValues(WorldGuardUtils.wrapPlayer(player), FlagUtils.COMMAND_ON_EXIT);
     }
-    	
+
 	@Override
 	public boolean onCrossBoundary(Player player, Location from, Location to, ApplicableRegionSet toSet, Set<ProtectedRegion> entered, Set<ProtectedRegion> exited, MoveType moveType)
 	{
 		if (!WorldGuardUtils.hasBypass(player))
 		{
 			Collection<Set<String>> commands = new ArrayList<Set<String>>(toSet.queryAllValues(WorldGuardUtils.wrapPlayer(player), FlagUtils.COMMAND_ON_EXIT));
-			
+
 			if (!commands.isEmpty())
 			{
 				for (ProtectedRegion region : toSet)
@@ -62,20 +62,15 @@ public class CommandOnExitFlag extends Handler
 	                }
 	            }
 			}
-			
+
 			for(Set<String> commands_ : this.lastCommands)
 			{
 				if (!commands.contains(commands_))
 				{
-					boolean isOp = player.isOp();
-					
+
 					try
 					{
-						if (!isOp)
-						{
-							player.setOp(true);
-						}
-						
+
 						for(String command : commands_)
 						{
 							WorldGuardExtraFlagsPlugin.getPlugin().getServer().dispatchCommand(player, command.substring(1).replace("%username%", player.getName())); //TODO: Make this better
@@ -83,19 +78,16 @@ public class CommandOnExitFlag extends Handler
 					}
 					finally
 					{
-						if (!isOp)
-						{
-							player.setOp(isOp);
-						}
+
 					}
 
 					break;
 				}
 			}
-			
+
 			this.lastCommands = commands;
 		}
-		
+
 		return true;
 	}
 }

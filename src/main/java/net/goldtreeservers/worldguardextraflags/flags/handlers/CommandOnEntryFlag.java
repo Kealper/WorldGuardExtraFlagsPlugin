@@ -28,13 +28,13 @@ public class CommandOnEntryFlag extends Handler
             return new CommandOnEntryFlag(session);
         }
     }
-	
+
 	private Collection<Set<String>> lastCommands;
-	    
+
 	protected CommandOnEntryFlag(Session session)
 	{
 		super(session);
-		
+
 		this.lastCommands = new ArrayList<>();
 	}
 
@@ -49,15 +49,10 @@ public class CommandOnEntryFlag extends Handler
 			{
 				if (!this.lastCommands.contains(commands_))
 				{
-					boolean isOp = player.isOp();
-					
+
 					try
 					{
-						if (!isOp)
-						{
-							player.setOp(true);
-						}
-						
+
 						for(String command : commands_)
 						{
 							WorldGuardExtraFlagsPlugin.getPlugin().getServer().dispatchCommand(player, command.substring(1).replace("%username%", player.getName())); //TODO: Make this better
@@ -65,18 +60,15 @@ public class CommandOnEntryFlag extends Handler
 					}
 					finally
 					{
-						if (!isOp)
-						{
-							player.setOp(isOp);
-						}
+
 					}
-					
+
 					break;
 				}
 			}
-			
+
 			this.lastCommands = new ArrayList<Set<String>>(commands);
-			
+
 			if (!this.lastCommands.isEmpty())
 			{
 				for (ProtectedRegion region : toSet)
@@ -89,7 +81,7 @@ public class CommandOnEntryFlag extends Handler
 	            }
 			}
 		}
-		
+
 		return true;
 	}
 }
